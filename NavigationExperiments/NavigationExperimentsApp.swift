@@ -1,17 +1,13 @@
-//
-//  NavigationExperimentsApp.swift
-//  NavigationExperiments
-//
-//  Created by Librecz Gábor on 05/06/2024.
-//
-
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct NavigationExperimentsApp: App {
+  let store = Store(initialState: .init(), reducer: { AppFeature()._printChanges() })
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+          AppView(store: self.store)
         }
     }
 }
