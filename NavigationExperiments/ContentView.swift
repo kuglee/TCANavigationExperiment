@@ -2,26 +2,20 @@ import ComposableArchitecture
 import SwiftUI
 
 @Reducer struct AppFeature {
-  @Reducer(state: .hashable) enum Detail {
-    case featureA(FeatureA)
-    case featureB(FeatureB)
-    case featureC(FeatureC)
-  }
-
-  @Reducer(state: .equatable, .sendable, action: .sendable) public enum Path {
+  @Reducer(state: .equatable, .sendable, action: .sendable) enum Path {
     case featureA(FeatureA)
     case featureB(FeatureB)
     case featureC(FeatureC)
   }
 
   @ObservableState struct State {
-    @Presents var detail: Detail.State?
+    @Presents var detail: Path.State?
     var path = StackState<Path.State>()
   }
 
   enum Action: BindableAction {
     case binding(BindingAction<State>)
-    case detail(PresentationAction<Detail.Action>)
+    case detail(PresentationAction<Path.Action>)
     case path(StackActionOf<Path>)
   }
 
@@ -35,7 +29,7 @@ import SwiftUI
       case .path: return .none
       }
     }
-    .ifLet(\.$detail, action: \.detail) { Detail.body }.forEach(\.path, action: \.path)
+    .ifLet(\.$detail, action: \.detail) { Path.body }.forEach(\.path, action: \.path)
   }
 }
 
@@ -64,13 +58,13 @@ public struct AppView: View {
   var navigationSplitView: some View {
     NavigationSplitView(columnVisibility: self.$columnVisibility) {
       List(selection: $store.detail) {
-        NavigationLink(value: AppFeature.Detail.State.featureA(FeatureA.State())) {
+        NavigationLink(value: AppFeature.Path.State.featureA(FeatureA.State())) {
           Text("Feature A")
         }
-        NavigationLink(value: AppFeature.Detail.State.featureB(FeatureB.State())) {
+        NavigationLink(value: AppFeature.Path.State.featureB(FeatureB.State())) {
           Text("Feature B")
         }
-        NavigationLink(value: AppFeature.Detail.State.featureC(FeatureC.State())) {
+        NavigationLink(value: AppFeature.Path.State.featureC(FeatureC.State())) {
           Text("Feature C")
         }
       }
@@ -84,7 +78,7 @@ public struct AppView: View {
     .navigationSplitViewStyle(.balanced)
   }
 
-  @ViewBuilder func rootView(store: Store<AppFeature.Detail.State, AppFeature.Detail.Action>?)
+  @ViewBuilder func rootView(store: Store<AppFeature.Path.State, AppFeature.Path.Action>?)
     -> some View
   {
     if let store {
@@ -112,7 +106,7 @@ public struct AppView: View {
 #Preview { AppView(store: Store(initialState: .init(), reducer: { AppFeature()._printChanges() })) }
 
 @Reducer public struct FeatureA {
-  @ObservableState public struct State: Hashable {
+  @ObservableState public struct State: Hashable, Sendable {
     let title = "Feature A"
     var count: Int
 
@@ -147,7 +141,7 @@ struct FeatureAView: View {
 }
 
 @Reducer public struct FeatureB {
-  @ObservableState public struct State: Hashable { let title = "Feature B" }
+  @ObservableState public struct State: Hashable, Sendable { let title = "Feature B" }
 }
 struct FeatureBView: View {
   let store: StoreOf<FeatureB>
@@ -163,7 +157,7 @@ struct FeatureBView: View {
 }
 
 @Reducer public struct FeatureC {
-  @ObservableState public struct State: Hashable { let title = "Feature C" }
+  @ObservableState public struct State: Hashable, Sendable { let title = "Feature C" }
 }
 struct FeatureCView: View {
   let store: StoreOf<FeatureC>

@@ -12,6 +12,7 @@
 		5DCDFABF2C108B90007AA240 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DCDFABE2C108B90007AA240 /* Assets.xcassets */; };
 		5DCDFAC32C108B90007AA240 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DCDFAC22C108B90007AA240 /* Preview Assets.xcassets */; };
 		5DCDFACB2C108BD1007AA240 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 5DCDFACA2C108BD1007AA240 /* ComposableArchitecture */; };
+		5DCDFACD2C10AF95007AA240 /* Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCDFACC2C10AF95007AA240 /* Hash.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		5DCDFABE2C108B90007AA240 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5DCDFAC02C108B90007AA240 /* NavigationExperiments.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NavigationExperiments.entitlements; sourceTree = "<group>"; };
 		5DCDFAC22C108B90007AA240 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		5DCDFACC2C10AF95007AA240 /* Hash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hash.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				5DCDFABA2C108B8E007AA240 /* NavigationExperimentsApp.swift */,
 				5DCDFABC2C108B8E007AA240 /* ContentView.swift */,
+				5DCDFACC2C10AF95007AA240 /* Hash.swift */,
 				5DCDFABE2C108B90007AA240 /* Assets.xcassets */,
 				5DCDFAC02C108B90007AA240 /* NavigationExperiments.entitlements */,
 				5DCDFAC12C108B90007AA240 /* Preview Content */,
@@ -148,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DCDFABD2C108B8E007AA240 /* ContentView.swift in Sources */,
+				5DCDFACD2C10AF95007AA240 /* Hash.swift in Sources */,
 				5DCDFABB2C108B8E007AA240 /* NavigationExperimentsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
