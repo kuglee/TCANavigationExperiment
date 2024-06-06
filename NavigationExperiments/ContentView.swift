@@ -16,27 +16,31 @@ import SwiftUI
 
   @ObservableState struct State {
     @Presents var detail: Path.State?
-    var detailTag: DetailTag? = nil
+    var detailTag: DetailTag?
     var path = StackState<Path.State>()
+
+    init(
+      detail: AppFeature.Path.State = .featureA(.init()),
+      path: StackState<AppFeature.Path.State> = StackState<Path.State>()
+    ) {
+      self.detail = detail
+      self.detailTag = detail.detailTag
+      self.path = path
+    }
   }
 
   enum Action: BindableAction {
     case binding(BindingAction<State>)
     case detail(PresentationAction<Path.Action>)
     case path(StackActionOf<Path>)
+    case onNavigationSplitViewAppear
   }
 
   var body: some ReducerOf<Self> {
     BindingReducer()
       .onChange(of: \.detailTag) { _, _ in
         Reduce { state, _ in
-          state.detail =
-            switch state.detailTag {
-            case .featureA: .featureA(.init())
-            case .featureB: .featureB(.init())
-            case .featureC: .featureC(.init())
-            case .none: .none
-            }
+          state.detail = state.detailTag.map { $0.pathState }
 
           return .none
         }
@@ -50,6 +54,10 @@ import SwiftUI
       case let .detail(.presented(.featureB(.rootNavigated(rootNavigation)))):
         return self.rootNavigated(state: &state, action: rootNavigation)
       case .detail: return .none
+      case .onNavigationSplitViewAppear:
+        state.detail = state.detailTag.map { $0.pathState }
+
+        return .none
       case let .path(.element(id: _, action: .featureB(.rootNavigated(rootNavigation)))):
         return self.rootNavigated(state: &state, action: rootNavigation)
       case .path: return .none
@@ -114,7 +122,7 @@ public struct AppView: View {
         self.destinationView(store: $0)
       }
     }
-    .navigationSplitViewStyle(.balanced)
+    .navigationSplitViewStyle(.balanced).onAppear { self.store.send(.onNavigationSplitViewAppear) }
   }
 
   @ViewBuilder func rootView(store: Store<AppFeature.Path.State, AppFeature.Path.Action>?)
