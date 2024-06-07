@@ -15,8 +15,8 @@ import SwiftUI
   }
 
   @ObservableState struct State {
-    @Presents var detail: Path.State?
-    var detailTag: DetailTag?
+    @Presents var _detail: Path.State?
+    private var _detailTag: DetailTag?
     var path = StackState<Path.State>()
 
     init(
@@ -27,24 +27,32 @@ import SwiftUI
       self.detailTag = detail.detailTag
       self.path = path
     }
+
+    public var detail: Path.State? {
+      get { self._detail }
+      set {
+        self._detail = newValue
+        self._detailTag = self.detail.map { $0.detailTag }
+      }
+    }
+
+    public var detailTag: DetailTag? {
+      get { self._detailTag }
+      set {
+        self._detailTag = newValue
+        self._detail = self.detailTag.map { $0.pathState }
+      }
+    }
   }
 
   enum Action: BindableAction {
     case binding(BindingAction<State>)
     case detail(PresentationAction<Path.Action>)
     case path(StackActionOf<Path>)
-    case onNavigationSplitViewAppear
   }
 
   var body: some ReducerOf<Self> {
     BindingReducer()
-      .onChange(of: \.detailTag) { _, _ in
-        Reduce { state, _ in
-          state.detail = state.detailTag.map { $0.pathState }
-
-          return .none
-        }
-      }
 
     Reduce { state, action in
       switch action {
@@ -54,16 +62,12 @@ import SwiftUI
       case let .detail(.presented(.featureB(.rootNavigated(rootNavigation)))):
         return self.rootNavigated(state: &state, action: rootNavigation)
       case .detail: return .none
-      case .onNavigationSplitViewAppear:
-        state.detail = state.detailTag.map { $0.pathState }
-
-        return .none
       case let .path(.element(id: _, action: .featureB(.rootNavigated(rootNavigation)))):
         return self.rootNavigated(state: &state, action: rootNavigation)
       case .path: return .none
       }
     }
-    .ifLet(\.$detail, action: \.detail) { Path.body }.forEach(\.path, action: \.path)
+    .ifLet(\.$_detail, action: \.detail) { Path.body }.forEach(\.path, action: \.path)
   }
 
   func rootNavigated(state: inout State, action: RootNavigationAction) -> Effect<Action> {
@@ -122,7 +126,7 @@ public struct AppView: View {
         self.destinationView(store: $0)
       }
     }
-    .navigationSplitViewStyle(.balanced).onAppear { self.store.send(.onNavigationSplitViewAppear) }
+    .navigationSplitViewStyle(.balanced)
   }
 
   @ViewBuilder func rootView(store: Store<AppFeature.Path.State, AppFeature.Path.Action>?)
