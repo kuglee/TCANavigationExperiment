@@ -2,7 +2,7 @@ import ComposableArchitecture
 import SwiftUI
 
 @Reducer struct AppFeature {
-  @Reducer(state: .equatable, .sendable, .hashable, action: .sendable) enum Path {
+  @Reducer(state: .equatable, .sendable, action: .sendable) enum Path {
     case featureA(FeatureA)
     case featureB(FeatureB)
     case featureC(FeatureC)
@@ -157,7 +157,7 @@ public struct AppView: View {
 #Preview { AppView(store: Store(initialState: .init(), reducer: { AppFeature()._printChanges() })) }
 
 @Reducer public struct FeatureA {
-  @ObservableState public struct State: Hashable, Sendable {
+  @ObservableState public struct State: Equatable, Sendable {
     let title = "Feature A"
     var count: Int
 
@@ -206,7 +206,7 @@ struct FeatureAView: View {
 }
 
 @Reducer public struct FeatureB {
-  @ObservableState public struct State: Hashable, Sendable {
+  @ObservableState public struct State: Equatable, Sendable {
     let title = "Feature B"
     var count: Int
 
@@ -255,7 +255,7 @@ struct FeatureBView: View {
 }
 
 @Reducer public struct FeatureC {
-  @ObservableState public struct State: Hashable, Sendable { let title = "Feature C" }
+  @ObservableState public struct State: Equatable, Sendable { let title = "Feature C" }
 }
 struct FeatureCView: View {
   let store: StoreOf<FeatureC>
