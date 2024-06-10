@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5DCDFABB2C108B8E007AA240 /* NavigationExperimentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCDFABA2C108B8E007AA240 /* NavigationExperimentsApp.swift */; };
+		5DCDFABB2C108B8E007AA240 /* TCANavigationExperimentApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCDFABA2C108B8E007AA240 /* TCANavigationExperimentApp.swift */; };
 		5DCDFABD2C108B8E007AA240 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCDFABC2C108B8E007AA240 /* ContentView.swift */; };
 		5DCDFABF2C108B90007AA240 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DCDFABE2C108B90007AA240 /* Assets.xcassets */; };
 		5DCDFAC32C108B90007AA240 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DCDFAC22C108B90007AA240 /* Preview Assets.xcassets */; };
@@ -16,11 +16,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5DCDFAB72C108B8E007AA240 /* NavigationExperiments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavigationExperiments.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5DCDFABA2C108B8E007AA240 /* NavigationExperimentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationExperimentsApp.swift; sourceTree = "<group>"; };
+		5DCDFAB72C108B8E007AA240 /* TCANavigationExperiment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCANavigationExperiment.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DCDFABA2C108B8E007AA240 /* TCANavigationExperimentApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCANavigationExperimentApp.swift; sourceTree = "<group>"; };
 		5DCDFABC2C108B8E007AA240 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5DCDFABE2C108B90007AA240 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		5DCDFAC02C108B90007AA240 /* NavigationExperiments.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NavigationExperiments.entitlements; sourceTree = "<group>"; };
+		5DCDFAC02C108B90007AA240 /* TCANavigationExperiment.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TCANavigationExperiment.entitlements; sourceTree = "<group>"; };
 		5DCDFAC22C108B90007AA240 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5DCDFACC2C10AF95007AA240 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -40,7 +40,7 @@
 		5DCDFAAE2C108B8E007AA240 = {
 			isa = PBXGroup;
 			children = (
-				5DCDFAB92C108B8E007AA240 /* NavigationExperiments */,
+				5DCDFAB92C108B8E007AA240 /* TCANavigationExperiment */,
 				5DCDFAB82C108B8E007AA240 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -48,22 +48,22 @@
 		5DCDFAB82C108B8E007AA240 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5DCDFAB72C108B8E007AA240 /* NavigationExperiments.app */,
+				5DCDFAB72C108B8E007AA240 /* TCANavigationExperiment.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5DCDFAB92C108B8E007AA240 /* NavigationExperiments */ = {
+		5DCDFAB92C108B8E007AA240 /* TCANavigationExperiment */ = {
 			isa = PBXGroup;
 			children = (
-				5DCDFABA2C108B8E007AA240 /* NavigationExperimentsApp.swift */,
+				5DCDFABA2C108B8E007AA240 /* TCANavigationExperimentApp.swift */,
 				5DCDFABC2C108B8E007AA240 /* ContentView.swift */,
 				5DCDFACC2C10AF95007AA240 /* Extensions.swift */,
 				5DCDFABE2C108B90007AA240 /* Assets.xcassets */,
-				5DCDFAC02C108B90007AA240 /* NavigationExperiments.entitlements */,
+				5DCDFAC02C108B90007AA240 /* TCANavigationExperiment.entitlements */,
 				5DCDFAC12C108B90007AA240 /* Preview Content */,
 			);
-			path = NavigationExperiments;
+			path = TCANavigationExperiment;
 			sourceTree = "<group>";
 		};
 		5DCDFAC12C108B90007AA240 /* Preview Content */ = {
@@ -77,9 +77,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5DCDFAB62C108B8E007AA240 /* NavigationExperiments */ = {
+		5DCDFAB62C108B8E007AA240 /* TCANavigationExperiment */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5DCDFAC62C108B90007AA240 /* Build configuration list for PBXNativeTarget "NavigationExperiments" */;
+			buildConfigurationList = 5DCDFAC62C108B90007AA240 /* Build configuration list for PBXNativeTarget "TCANavigationExperiment" */;
 			buildPhases = (
 				5DCDFAB32C108B8E007AA240 /* Sources */,
 				5DCDFAB42C108B8E007AA240 /* Frameworks */,
@@ -89,12 +89,12 @@
 			);
 			dependencies = (
 			);
-			name = NavigationExperiments;
+			name = TCANavigationExperiment;
 			packageProductDependencies = (
 				5DCDFACA2C108BD1007AA240 /* ComposableArchitecture */,
 			);
-			productName = NavigationExperiments;
-			productReference = 5DCDFAB72C108B8E007AA240 /* NavigationExperiments.app */;
+			productName = TCANavigationExperiment;
+			productReference = 5DCDFAB72C108B8E007AA240 /* TCANavigationExperiment.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -112,7 +112,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5DCDFAB22C108B8E007AA240 /* Build configuration list for PBXProject "NavigationExperiments" */;
+			buildConfigurationList = 5DCDFAB22C108B8E007AA240 /* Build configuration list for PBXProject "TCANavigationExperiment" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -128,7 +128,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5DCDFAB62C108B8E007AA240 /* NavigationExperiments */,
+				5DCDFAB62C108B8E007AA240 /* TCANavigationExperiment */,
 			);
 		};
 /* End PBXProject section */
@@ -152,7 +152,7 @@
 			files = (
 				5DCDFABD2C108B8E007AA240 /* ContentView.swift in Sources */,
 				5DCDFACD2C10AF95007AA240 /* Extensions.swift in Sources */,
-				5DCDFABB2C108B8E007AA240 /* NavigationExperimentsApp.swift in Sources */,
+				5DCDFABB2C108B8E007AA240 /* TCANavigationExperimentApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,10 +278,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = NavigationExperiments/NavigationExperiments.entitlements;
+				CODE_SIGN_ENTITLEMENTS = TCANavigationExperiment/TCANavigationExperiment.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"NavigationExperiments/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"TCANavigationExperiment/Preview Content\"";
 				DEVELOPMENT_TEAM = C89KNBM28S;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -301,7 +301,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kuglee.NavigationExperiments;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kuglee.TCANavigationExperiment;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -316,10 +316,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = NavigationExperiments/NavigationExperiments.entitlements;
+				CODE_SIGN_ENTITLEMENTS = TCANavigationExperiment/TCANavigationExperiment.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"NavigationExperiments/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"TCANavigationExperiment/Preview Content\"";
 				DEVELOPMENT_TEAM = C89KNBM28S;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -339,7 +339,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kuglee.NavigationExperiments;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kuglee.TCANavigationExperiment;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -352,7 +352,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5DCDFAB22C108B8E007AA240 /* Build configuration list for PBXProject "NavigationExperiments" */ = {
+		5DCDFAB22C108B8E007AA240 /* Build configuration list for PBXProject "TCANavigationExperiment" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5DCDFAC42C108B90007AA240 /* Debug */,
@@ -361,7 +361,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5DCDFAC62C108B90007AA240 /* Build configuration list for PBXNativeTarget "NavigationExperiments" */ = {
+		5DCDFAC62C108B90007AA240 /* Build configuration list for PBXNativeTarget "TCANavigationExperiment" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5DCDFAC72C108B90007AA240 /* Debug */,

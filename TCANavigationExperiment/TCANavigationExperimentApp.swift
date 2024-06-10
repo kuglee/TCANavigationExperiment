@@ -2,7 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 
 @main
-struct NavigationExperimentsApp: App {
+struct TCANavigationExperimentApp: App {
   let store = Store(initialState: .init(), reducer: { AppFeature()._printChanges() })
 
     var body: some Scene {
