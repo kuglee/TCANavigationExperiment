@@ -12,7 +12,6 @@
 		5DCDFABF2C108B90007AA240 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DCDFABE2C108B90007AA240 /* Assets.xcassets */; };
 		5DCDFAC32C108B90007AA240 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5DCDFAC22C108B90007AA240 /* Preview Assets.xcassets */; };
 		5DCDFACB2C108BD1007AA240 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 5DCDFACA2C108BD1007AA240 /* ComposableArchitecture */; };
-		5DCDFACD2C10AF95007AA240 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCDFACC2C10AF95007AA240 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,7 +21,6 @@
 		5DCDFABE2C108B90007AA240 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5DCDFAC02C108B90007AA240 /* TCANavigationExperiment.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TCANavigationExperiment.entitlements; sourceTree = "<group>"; };
 		5DCDFAC22C108B90007AA240 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		5DCDFACC2C10AF95007AA240 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +56,6 @@
 			children = (
 				5DCDFABA2C108B8E007AA240 /* TCANavigationExperimentApp.swift */,
 				5DCDFABC2C108B8E007AA240 /* ContentView.swift */,
-				5DCDFACC2C10AF95007AA240 /* Extensions.swift */,
 				5DCDFABE2C108B90007AA240 /* Assets.xcassets */,
 				5DCDFAC02C108B90007AA240 /* TCANavigationExperiment.entitlements */,
 				5DCDFAC12C108B90007AA240 /* Preview Content */,
@@ -105,7 +102,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					5DCDFAB62C108B8E007AA240 = {
 						CreatedOnToolsVersion = 15.4;
@@ -151,7 +148,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DCDFABD2C108B8E007AA240 /* ContentView.swift in Sources */,
-				5DCDFACD2C10AF95007AA240 /* Extensions.swift in Sources */,
 				5DCDFABB2C108B8E007AA240 /* TCANavigationExperimentApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -193,6 +189,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -254,6 +251,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -281,6 +279,7 @@
 				CODE_SIGN_ENTITLEMENTS = TCANavigationExperiment/TCANavigationExperiment.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"TCANavigationExperiment/Preview Content\"";
 				DEVELOPMENT_TEAM = C89KNBM28S;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -306,8 +305,13 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_GLOBAL_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_INFER_SENDABLE_FROM_CAPTURES = YES;
+				SWIFT_UPCOMING_FEATURE_ISOLATED_DEFAULT_VALUES = YES;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				_EXPERIMENTAL_SWIFT_EXPLICIT_MODULES = YES;
 			};
 			name = Debug;
 		};
@@ -319,6 +323,7 @@
 				CODE_SIGN_ENTITLEMENTS = TCANavigationExperiment/TCANavigationExperiment.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"TCANavigationExperiment/Preview Content\"";
 				DEVELOPMENT_TEAM = C89KNBM28S;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -344,8 +349,13 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_GLOBAL_CONCURRENCY = YES;
+				SWIFT_UPCOMING_FEATURE_INFER_SENDABLE_FROM_CAPTURES = YES;
+				SWIFT_UPCOMING_FEATURE_ISOLATED_DEFAULT_VALUES = YES;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				_EXPERIMENTAL_SWIFT_EXPLICIT_MODULES = YES;
 			};
 			name = Release;
 		};

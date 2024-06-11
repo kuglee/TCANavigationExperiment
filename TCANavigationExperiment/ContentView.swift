@@ -8,12 +8,32 @@ import SwiftUI
   case menuFeature(MenuFeature)
 }
 
+extension AppPath.State {
+  var detailTag: AppFeature.DetailTag {
+    switch self {
+    case .featureA: .featureA
+    case .featureB: .featureB
+    case .featureC: .featureC
+    case .menuFeature: .menuFeature
+    }
+  }
+}
+
 @Reducer struct AppFeature {
   enum DetailTag: Equatable, Hashable {
     case featureA
     case featureB
     case featureC
     case menuFeature
+
+    var pathState: AppPath.State {
+      switch self {
+      case .featureA: .featureA(.init())
+      case .featureB: .featureB(.init())
+      case .featureC: .featureC(.init())
+      case .menuFeature: .menuFeature(.init())
+      }
+    }
   }
 
   enum Tab { case home, menu }
@@ -152,8 +172,7 @@ public struct AppView: View {
     }
   }
 
-  @MainActor var navigationStack: some View {
-    //    TabView(selection: $store.selectedTab.sending(\.selectTab)) {
+  var navigationStack: some View {
     TabView(selection: self.$store.selectedTab) {
       HomeTabView(store: self.store.scope(state: \.homeTab, action: \.homeTab))
         .tabItem { Label("Kezdőlap", systemImage: "house.fill") }.tag(AppFeature.Tab.home)
