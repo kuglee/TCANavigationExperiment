@@ -81,6 +81,7 @@ extension AppPath.State {
     case menuTab(MenuTab.Action)
     case tabViewOnAppear
     case navigationSplitViewOnAppear
+    case navigationSplitViewOnAppear2
   }
 
   var body: some ReducerOf<Self> {
@@ -124,14 +125,24 @@ extension AppPath.State {
         return .none
       case .navigationSplitViewOnAppear:
         switch state.selectedTab {
-        case .home:
-          state.detail = .featureA(state.homeTab.rootFeature)
-          state.path = state.homeTab.path
-          state.homeTab.path = StackState([])
-        case .menu:
-          state.detail = state.menuTab.path.first ?? .featureA(.init())
-          state.path = StackState(state.menuTab.path.dropFirst())
-          state.menuTab.path = StackState([])
+        case .home: state.detail = .featureA(state.homeTab.rootFeature)
+        case .menu: state.detail = state.menuTab.path.first ?? .featureA(.init())
+        }
+
+        return .run { send in await send(.navigationSplitViewOnAppear2) }
+      case .navigationSplitViewOnAppear2:
+        var transaction = Transaction(animation: nil)
+        transaction.disablesAnimations = true
+        
+        withTransaction(transaction) {
+          switch state.selectedTab {
+          case .home:
+            state.path = state.homeTab.path
+            state.homeTab.path = StackState([])
+          case .menu:
+            state.path = StackState(state.menuTab.path.dropFirst())
+            state.menuTab.path = StackState([])
+          }
         }
 
         return .none
