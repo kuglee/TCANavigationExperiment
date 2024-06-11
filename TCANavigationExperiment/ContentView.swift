@@ -36,7 +36,13 @@ extension AppPath.State {
     }
   }
 
-  enum Tab { case home, menu }
+  enum Tab {
+    case home
+    case menu
+    case featureA
+    case featureB
+    case featureC
+  }
 
   @ObservableState struct State {
     @Presents var _detail: AppPath.State?
@@ -79,8 +85,8 @@ extension AppPath.State {
     case path(StackActionOf<AppPath>)
     case homeTab(HomeTab.Action)
     case menuTab(MenuTab.Action)
-    case tabViewOnAppear
-    case navigationSplitViewOnAppear
+    case onHorizontalSizeClassChange(UserInterfaceSizeClass?)
+    case onHorizontalSizeClassChange2
   }
 
   var body: some ReducerOf<Self> {
@@ -91,6 +97,15 @@ extension AppPath.State {
 
     Reduce { state, action in
       switch action {
+      case .binding(\.selectedTab):
+        switch state.selectedTab {
+        case .home, .menu: break
+        case .featureA: state.detail = .featureA(.init())
+        case .featureB: state.detail = .featureB(.init())
+        case .featureC: state.detail = .featureC(.init())
+        }
+
+        return .none
       case .binding: return .none
       case let .detail(.presented(.featureA(.rootNavigated(rootNavigation)))):
         return self.rootNavigated(state: &state, action: rootNavigation)
@@ -101,37 +116,69 @@ extension AppPath.State {
         return self.rootNavigated(state: &state, action: rootNavigation)
       case .path: return .none
       case .homeTab, .menuTab: return .none
-      case .tabViewOnAppear:
-        if let detail = state.detail {
-          switch detail {
-          case let .featureA(rootFeature):
-            state.selectedTab = .home
-            state.homeTab.rootFeature = rootFeature
-            state.homeTab.path = state.path
-          case .featureB, .featureC:
-            state.selectedTab = .menu
-            state.menuTab.path = [detail] + state.path
-          case .menuFeature:
-            XCTFail(
-              "The detail is the menu feature. This can only happen when the NavigationSplitView's detail is the menu feature. The NavigationSplitView shouldn't show the menu feature as the detail."
-            )
-          }
+      case let .onHorizontalSizeClassChange(horizontalSizeClass):
+        guard let horizontalSizeClass else { return .none }
 
-          state.detail = nil
-          state.path = StackState([])
+        switch horizontalSizeClass {
+        case .compact:
+          if let detail = state.detail {
+            switch detail {
+            case let .featureA(rootFeature):
+              state.selectedTab = .home
+              state.homeTab.rootFeature = rootFeature
+              state.homeTab.path = state.path
+
+            case .featureB, .featureC:
+              state.selectedTab = .menu
+              state.menuTab.path = [detail] + state.path
+
+            case .menuFeature:
+              XCTFail(
+                "The detail is the menu feature. This can only happen when the NavigationSplitView's detail is the menu feature. The NavigationSplitView shouldn't show the menu feature as the detail."
+              )
+            }
+
+            state.detail = nil
+            state.path = StackState([])
+          }
+        case .regular:
+          switch state.selectedTab {
+          case .home:
+            state.detail = .featureA(state.homeTab.rootFeature)
+            return .run { send in await send(.onHorizontalSizeClassChange2) }
+          case .menu:
+            state.detail = state.menuTab.path.first ?? .featureA(.init())
+            return .run { send in await send(.onHorizontalSizeClassChange2) }
+          case .featureA, .featureB, .featureC: break
+          }
+        @unknown default: break
         }
 
         return .none
-      case .navigationSplitViewOnAppear:
-        switch state.selectedTab {
-        case .home:
-          state.detail = .featureA(state.homeTab.rootFeature)
-          state.path = state.homeTab.path
-          state.homeTab.path = StackState([])
-        case .menu:
-          state.detail = state.menuTab.path.first ?? .featureA(.init())
-          state.path = StackState(state.menuTab.path.dropFirst())
-          state.menuTab.path = StackState([])
+      case .onHorizontalSizeClassChange2:
+        var transaction = Transaction(animation: nil)
+        transaction.disablesAnimations = true
+
+        withTransaction(transaction) {
+          switch state.selectedTab {
+          case .home:
+            state.path = state.homeTab.path
+            state.homeTab.path = StackState([])
+          case .menu:
+            state.path = StackState(state.menuTab.path.dropFirst())
+            state.menuTab.path = StackState([])
+
+            if let detailTag = state.detail?.detailTag {
+              switch detailTag {
+              case .featureA: state.selectedTab = .featureA
+              case .featureB: state.selectedTab = .featureB
+              case .featureC: state.selectedTab = .featureC
+              case .menuFeature: state.selectedTab = .featureA
+              }
+            }
+
+          case .featureA, .featureB, .featureC: break
+          }
         }
 
         return .none
@@ -165,51 +212,61 @@ public struct AppView: View {
   @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
   public var body: some View {
-    if self.horizontalSizeClass == .compact {
-      self.navigationStack.onAppear { self.store.send(.tabViewOnAppear) }
+    self.navigationStack.onChange(of: horizontalSizeClass) { _, newValue in
+      self.store.send(.onHorizontalSizeClassChange(newValue))
+    }
+  }
+
+  @ViewBuilder var navigationStack: some View {
+    if #available(macOS 15.0, *) {
+      TabView(selection: self.$store.selectedTab) {
+        Tab("Kezdőlap", systemImage: "house.fill", value: AppFeature.Tab.home) {
+          HomeTabView(store: self.store.scope(state: \.homeTab, action: \.homeTab))
+        }
+        Tab("Menu", systemImage: "list.dash", value: AppFeature.Tab.menu) {
+          MenuTabView(store: self.store.scope(state: \.menuTab, action: \.menuTab))
+        }
+        .defaultVisibility(.hidden, for: .tabBar).defaultVisibility(.hidden, for: .sidebar)
+        Tab("Feature A", systemImage: "a.square", value: AppFeature.Tab.featureA) {
+          self.detailView
+        }
+        .defaultVisibility(.hidden, for: .tabBar).hidden(self.horizontalSizeClass == .compact)
+        Tab("Feature B", systemImage: "b.square", value: AppFeature.Tab.featureB) {
+          self.detailView
+        }
+        .defaultVisibility(.hidden, for: .tabBar).hidden(self.horizontalSizeClass == .compact)
+        Tab("Feature C", systemImage: "c.square", value: AppFeature.Tab.featureC) {
+          self.detailView
+        }
+        .defaultVisibility(.hidden, for: .tabBar).hidden(self.horizontalSizeClass == .compact)
+      }
+      .tabViewStyle(.sidebarAdaptable)
     } else {
-      self.navigationSplitView.onAppear { self.store.send(.navigationSplitViewOnAppear) }
+      TabView(selection: self.$store.selectedTab) {
+        HomeTabView(store: self.store.scope(state: \.homeTab, action: \.homeTab))
+          .tabItem { Label("Kezdőlap", systemImage: "house.fill") }.tag(AppFeature.Tab.home)
+        MenuTabView(store: self.store.scope(state: \.menuTab, action: \.menuTab))
+          .tabItem { Label("Menu", systemImage: "list.dash") }.tag(AppFeature.Tab.menu)
+      }
     }
   }
 
-  var navigationStack: some View {
-    TabView(selection: self.$store.selectedTab) {
-      HomeTabView(store: self.store.scope(state: \.homeTab, action: \.homeTab))
-        .tabItem { Label("Kezdőlap", systemImage: "house.fill") }.tag(AppFeature.Tab.home)
-      MenuTabView(store: self.store.scope(state: \.menuTab, action: \.menuTab))
-        .tabItem { Label("Menu", systemImage: "list.dash") }.tag(AppFeature.Tab.menu)
-    }
-  }
-
-  var navigationSplitView: some View {
-    NavigationSplitView(columnVisibility: self.$columnVisibility) {
-      List(selection: $store.detailTag) {
-        // no arrow in compact mode when not using NavigationLink
-        // since we're using using a NavigationStack in compact mode so it's ok
-        Text("Feature A").tag(AppFeature.DetailTag.featureA)
-        Text("Feature B").tag(AppFeature.DetailTag.featureB)
-        Text("Feature C").tag(AppFeature.DetailTag.featureC)
+  var detailView: some View {
+    NavigationStack(path: self.$store.scope(state: \.path, action: \.path)) {
+      Group {
+        if let store = self.store.scope(state: \.detail, action: \.detail.presented) {
+          switch store.case {
+          case let .featureA(store): FeatureAView(store: store)
+          case let .featureB(store): FeatureBView(store: store)
+          case let .featureC(store): FeatureCView(store: store)
+          case let .menuFeature(store): MenuFeatureView(store: store)
+          }
+        } else {
+          Text("root")
+        }
       }
-    } detail: {
-      NavigationStack(path: self.$store.scope(state: \.path, action: \.path)) {
-        self.rootView(store: store.scope(state: \.detail, action: \.detail.presented))
-      } destination: {
-        self.destinationView(store: $0)
-      }
-    }
-    .navigationSplitViewStyle(.balanced)
-  }
-
-  @ViewBuilder func rootView(store: Store<AppPath.State, AppPath.Action>?) -> some View {
-    if let store {
-      switch store.case {
-      case let .featureA(store): FeatureAView(store: store)
-      case let .featureB(store): FeatureBView(store: store)
-      case let .featureC(store): FeatureCView(store: store)
-      case let .menuFeature(store): MenuFeatureView(store: store)
-      }
-    } else {
-      Text("root")
+    } destination: {
+      self.destinationView(store: $0)
     }
   }
 
