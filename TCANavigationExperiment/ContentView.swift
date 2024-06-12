@@ -174,13 +174,13 @@ public struct AppView: View {
 
   public var body: some View {
     if self.horizontalSizeClass == .compact {
-      self.navigationStack.onAppear { self.store.send(.tabViewOnAppear) }
+      self.tabView.onAppear { self.store.send(.tabViewOnAppear) }
     } else {
       self.navigationSplitView.onAppear { self.store.send(.navigationSplitViewOnAppear) }
     }
   }
 
-  var navigationStack: some View {
+  var tabView: some View {
     TabView(selection: self.$store.selectedTab) {
       HomeTabView(store: self.store.scope(state: \.homeTab, action: \.homeTab))
         .tabItem { Label("Kezdőlap", systemImage: "house.fill") }.tag(AppFeature.Tab.home)
