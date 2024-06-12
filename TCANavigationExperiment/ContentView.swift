@@ -131,10 +131,7 @@ extension AppPath.State {
 
         return .run { send in await send(.navigationSplitViewOnAppear2) }
       case .navigationSplitViewOnAppear2:
-        var transaction = Transaction(animation: nil)
-        transaction.disablesAnimations = true
-        
-        withTransaction(transaction) {
+        withTransaction(Transaction.disabled) {
           switch state.selectedTab {
           case .home:
             state.path = state.homeTab.path
@@ -544,4 +541,13 @@ struct MenuTabView: View {
       }
     }
   }
+}
+
+extension Transaction {
+  init(animation: Animation?, disablesAnimations: Bool) {
+    self = Self(animation: animation)
+    self.disablesAnimations = disablesAnimations
+  }
+
+  nonisolated(unsafe) public static let disabled = Self(animation: nil, disablesAnimations: true)
 }
