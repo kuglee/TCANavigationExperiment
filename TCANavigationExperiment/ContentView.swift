@@ -1,41 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 
-@Reducer(state: .equatable, .sendable, action: .sendable) public enum AppPath {
-  case featureA(FeatureA)
-  case featureB(FeatureB)
-  case featureC(FeatureC)
-  case menuFeature(MenuFeature)
-}
-
-extension AppPath.State {
-  var detailTag: AppFeature.DetailTag {
-    switch self {
-    case .featureA: .featureA
-    case .featureB: .featureB
-    case .featureC: .featureC
-    case .menuFeature: .menuFeature
-    }
-  }
-}
-
 @Reducer struct AppFeature {
-  enum DetailTag: Equatable, Hashable {
-    case featureA
-    case featureB
-    case featureC
-    case menuFeature
-
-    var pathState: AppPath.State {
-      switch self {
-      case .featureA: .featureA(.init())
-      case .featureB: .featureB(.init())
-      case .featureC: .featureC(.init())
-      case .menuFeature: .menuFeature(.init())
-      }
-    }
-  }
-
   enum Tab { case home, menu }
 
   @ObservableState struct State {
@@ -95,13 +61,12 @@ extension AppPath.State {
     Reduce { state, action in
       switch action {
       case .binding: return .none
-      case let .detail(.presented(.featureA(.rootNavigated(rootNavigation)))):
-        return self.rootNavigated(state: &state, action: rootNavigation)
-      case let .detail(.presented(.featureB(.rootNavigated(rootNavigation)))):
-        return self.rootNavigated(state: &state, action: rootNavigation)
+      case let .detail(.presented(.featureA(.navigated(detailTag)))),
+        let .detail(.presented(.featureB(.navigated(detailTag)))):
+        return self.navigate(state: &state, detailTag: detailTag)
       case .detail: return .none
-      case let .path(.element(id: _, action: .featureB(.rootNavigated(rootNavigation)))):
-        return self.rootNavigated(state: &state, action: rootNavigation)
+      case let .path(.element(id: _, action: .featureB(.navigated(detailTag)))):
+        return self.navigate(state: &state, detailTag: detailTag)
       case .path: return .none
       case .homeTab, .menuTab: return .none
       case .tabViewOnAppear:
@@ -150,21 +115,10 @@ extension AppPath.State {
     .ifLet(\.$_detail, action: \.detail) { AppPath.body }.forEach(\.path, action: \.path)
   }
 
-  func rootNavigated(state: inout State, action: RootNavigationAction) -> Effect<Action> {
-    switch action {
-    case .goToAScreen:
-      state.path.append(.featureA(.init()))
+  func navigate(state: inout State, detailTag: DetailTag) -> Effect<Action> {
+    state.path.append(detailTag.pathState)
 
-      return .none
-    case .goToBScreen:
-      state.path.append(.featureB(.init()))
-
-      return .none
-    case .goToCScreen:
-      state.path.append(.featureC(.init()))
-
-      return .none
-    }
+    return .none
   }
 }
 
@@ -196,9 +150,9 @@ public struct AppView: View {
       List(selection: $store.detailTag) {
         // no arrow in compact mode when not using NavigationLink
         // since we're using using a NavigationStack in compact mode so it's ok
-        Text("Feature A").tag(AppFeature.DetailTag.featureA)
-        Text("Feature B").tag(AppFeature.DetailTag.featureB)
-        Text("Feature C").tag(AppFeature.DetailTag.featureC)
+        Text("Feature A").tag(DetailTag.featureA)
+        Text("Feature B").tag(DetailTag.featureB)
+        Text("Feature C").tag(DetailTag.featureC)
       }
     } detail: {
       NavigationStack(path: self.$store.scope(state: \.path, action: \.path)) {
@@ -246,7 +200,7 @@ public struct AppView: View {
   public enum Action: Sendable {
     case count
     case count2
-    case rootNavigated(RootNavigationAction)
+    case navigated(DetailTag)
     case goToBButtonTapped
   }
 
@@ -261,8 +215,8 @@ public struct AppView: View {
         state.count -= 1
 
         return .none
-      case .rootNavigated: return .none
-      case .goToBButtonTapped: return .run { send in await send(.rootNavigated(.goToBScreen)) }
+      case .navigated: return .none
+      case .goToBButtonTapped: return .run { send in await send(.navigated(.featureB)) }
       }
     }
   }
@@ -296,7 +250,7 @@ struct FeatureAView: View {
   public enum Action: Sendable {
     case count
     case count2
-    case rootNavigated(RootNavigationAction)
+    case navigated(DetailTag)
     case goToCButtonTapped
   }
 
@@ -311,8 +265,8 @@ struct FeatureAView: View {
         state.count -= 1
 
         return .none
-      case .rootNavigated: return .none
-      case .goToCButtonTapped: return .run { send in await send(.rootNavigated(.goToCScreen)) }
+      case .navigated: return .none
+      case .goToCButtonTapped: return .run { send in await send(.navigated(.featureC)) }
       }
     }
   }
@@ -361,14 +315,14 @@ struct FeatureCView: View {
 
   public enum Action: Sendable {
     case goToBButtonTapped
-    case rootNavigated(RootNavigationAction)
+    case navigated(DetailTag)
   }
 
   public var body: some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .goToBButtonTapped: return .run { send in await send(.rootNavigated(.goToBScreen)) }
-      case .rootNavigated: return .none
+      case .goToBButtonTapped: return .run { send in await send(.navigated(.featureB)) }
+      case .navigated: return .none
       }
     }
   }
@@ -389,12 +343,6 @@ struct MenuFeatureView: View {
   }
 }
 
-public enum RootNavigationAction: Sendable {
-  case goToAScreen
-  case goToBScreen
-  case goToCScreen
-}
-
 @Reducer public struct HomeTab {
   @ObservableState public struct State: Equatable, Sendable {
     var path = StackState<AppPath.State>()
@@ -405,7 +353,7 @@ public enum RootNavigationAction: Sendable {
 
   public enum Action: BindableAction, Sendable {
     case binding(BindingAction<State>)
-    case rootNavigated(RootNavigationAction)
+    case navigated(DetailTag)
     case goToBButtonTapped
     case path(StackActionOf<AppPath>)
     case rootFeature(FeatureA.Action)
@@ -419,36 +367,24 @@ public enum RootNavigationAction: Sendable {
     Reduce { state, action in
       switch action {
       case .binding: return .none
-      case .rootNavigated: return .none
-      case .goToBButtonTapped: return .run { send in await send(.rootNavigated(.goToBScreen)) }
-      case let .path(.element(id: _, action: .featureB(.rootNavigated(rootNavigation)))):
-        return self.rootNavigated(state: &state, action: rootNavigation)
+      case .navigated: return .none
+      case .goToBButtonTapped: return .run { send in await send(.navigated(.featureB)) }
+      case let .path(.element(id: _, action: .featureB(.navigated(detailTag)))):
+        return self.navigate(state: &state, detailTag: detailTag)
       case .path: return .none
-      case let .rootFeature(.rootNavigated(rootNavigation)):
-        return self.rootNavigated(state: &state, action: rootNavigation)
+      case let .rootFeature(.navigated(detailTag)):
+        return self.navigate(state: &state, detailTag: detailTag)
       case .rootFeature: return .none
       }
     }
     .forEach(\.path, action: \.path)
   }
 
-  func rootNavigated(state: inout State, action: RootNavigationAction) -> Effect<Action> {
-    switch action {
-    case .goToAScreen:
-      state.path.append(.featureA(.init()))
+  func navigate(state: inout State, detailTag: DetailTag) -> Effect<Action> {
+    state.path.append(detailTag.pathState)
 
-      return .none
-    case .goToBScreen:
-      state.path.append(.featureB(.init()))
-
-      return .none
-    case .goToCScreen:
-      state.path.append(.featureC(.init()))
-
-      return .none
-    }
+    return .none
   }
-
 }
 
 struct HomeTabView: View {
@@ -484,7 +420,7 @@ struct HomeTabView: View {
 
   public enum Action: BindableAction, Sendable {
     case binding(BindingAction<State>)
-    case rootNavigated(RootNavigationAction)
+    case navigated(DetailTag)
     case path(StackActionOf<AppPath>)
     case rootFeature(MenuFeature.Action)
   }
@@ -497,35 +433,23 @@ struct HomeTabView: View {
     Reduce { state, action in
       switch action {
       case .binding: return .none
-      case .rootNavigated: return .none
-      case let .path(.element(id: _, action: .featureB(.rootNavigated(rootNavigation)))):
-        return self.rootNavigated(state: &state, action: rootNavigation)
+      case .navigated: return .none
+      case let .path(.element(id: _, action: .featureB(.navigated(detailTag)))):
+        return self.navigate(state: &state, detailTag: detailTag)
       case .path: return .none
-      case let .rootFeature(.rootNavigated(rootNavigation)):
-        return self.rootNavigated(state: &state, action: rootNavigation)
+      case let .rootFeature(.navigated(detailTag)):
+        return self.navigate(state: &state, detailTag: detailTag)
       case .rootFeature: return .none
       }
     }
     .forEach(\.path, action: \.path)
   }
 
-  func rootNavigated(state: inout State, action: RootNavigationAction) -> Effect<Action> {
-    switch action {
-    case .goToAScreen:
-      state.path.append(.featureA(.init()))
+  func navigate(state: inout State, detailTag: DetailTag) -> Effect<Action> {
+    state.path.append(detailTag.pathState)
 
-      return .none
-    case .goToBScreen:
-      state.path.append(.featureB(.init()))
-
-      return .none
-    case .goToCScreen:
-      state.path.append(.featureC(.init()))
-
-      return .none
-    }
+    return .none
   }
-
 }
 
 struct MenuTabView: View {
@@ -552,4 +476,40 @@ extension Transaction {
   }
 
   nonisolated(unsafe) public static let disabled = Self(animation: nil, disablesAnimations: true)
+}
+
+@Reducer(state: .equatable, .sendable, action: .sendable) public enum AppPath {
+  case featureA(FeatureA)
+  case featureB(FeatureB)
+  case featureC(FeatureC)
+  case menuFeature(MenuFeature)
+}
+
+extension AppPath.State {
+  var detailTag: DetailTag {
+    switch self {
+    case .featureA: .featureA
+    case .featureB: .featureB
+    case .featureC: .featureC
+    case .menuFeature: .menuFeature
+    }
+  }
+}
+
+public enum DetailTag: Equatable, Sendable {
+  case featureA
+  case featureB
+  case featureC
+  case menuFeature
+}
+
+extension DetailTag {
+  public var pathState: AppPath.State {
+    switch self {
+    case .featureA: .featureA(.init())
+    case .featureB: .featureB(.init())
+    case .featureC: .featureC(.init())
+    case .menuFeature: .menuFeature(.init())
+    }
+  }
 }
