@@ -61,6 +61,7 @@ extension AppPath.State {
       set {
         self._detail = newValue
         self._detailTag = self.detail.map { $0.detailTag }
+        self.path = StackState([])  // SwiftUI only resets the path when using a List with selection
       }
     }
 
@@ -69,6 +70,7 @@ extension AppPath.State {
       set {
         self._detailTag = newValue
         self._detail = self.detailTag.map { $0.pathState }
+        self.path = StackState([])  // SwiftUI only resets the path when using a List with selection
       }
     }
   }
