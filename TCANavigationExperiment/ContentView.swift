@@ -314,14 +314,18 @@ struct FeatureCView: View {
   }
 
   public enum Action: Sendable {
+    case goToAButtonTapped
     case goToBButtonTapped
+    case goToCButtonTapped
     case navigated(DetailTag)
   }
 
   public var body: some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
+      case .goToAButtonTapped: return .run { send in await send(.navigated(.featureA)) }
       case .goToBButtonTapped: return .run { send in await send(.navigated(.featureB)) }
+      case .goToCButtonTapped: return .run { send in await send(.navigated(.featureC)) }
       case .navigated: return .none
       }
     }
@@ -335,7 +339,9 @@ struct MenuFeatureView: View {
     ScrollView {
       VStack {
         Text(self.store.title)
+        Button("Go to A") { self.store.send(.goToAButtonTapped) }
         Button("Go to B") { self.store.send(.goToBButtonTapped) }
+        Button("Go to C") { self.store.send(.goToCButtonTapped) }
         Rectangle().fill(.red).frame(height: 2000, alignment: .top)
       }
     }
@@ -434,7 +440,8 @@ struct HomeTabView: View {
       switch action {
       case .binding: return .none
       case .navigated: return .none
-      case let .path(.element(id: _, action: .featureB(.navigated(detailTag)))):
+      case let .path(.element(id: _, action: .featureA(.navigated(detailTag)))),
+        let .path(.element(id: _, action: .featureB(.navigated(detailTag)))):
         return self.navigate(state: &state, detailTag: detailTag)
       case .path: return .none
       case let .rootFeature(.navigated(detailTag)):
