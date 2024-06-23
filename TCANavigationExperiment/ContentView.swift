@@ -173,7 +173,7 @@ public struct AppView: View {
       case let .menuFeature(store): MenuFeatureView(store: store)
       }
     } else {
-      Text("root")
+      EmptyView().onAppear { XCTFail("Should never show an empty detail.") }
     }
   }
 
