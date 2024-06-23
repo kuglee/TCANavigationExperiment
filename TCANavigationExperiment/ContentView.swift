@@ -199,7 +199,6 @@ public struct AppView: View {
 
   public enum Action: Sendable {
     case count
-    case count2
     case navigated(DetailTag)
     case goToBButtonTapped
   }
@@ -209,10 +208,6 @@ public struct AppView: View {
       switch action {
       case .count:
         state.count += 1
-
-        return .none
-      case .count2:
-        state.count -= 1
 
         return .none
       case .navigated: return .none
@@ -230,8 +225,8 @@ struct FeatureAView: View {
       VStack {
         Text(self.store.title)
         Button("Go to B") { self.store.send(.goToBButtonTapped) }
-        Button("Count up: \(self.store.count)") { self.store.send(.count) }
-        Button("Count down: \(self.store.count)") { self.store.send(.count2) }
+        Button("Increment") { self.store.send(.count) }
+        Text("\(self.store.count)")
         Rectangle().fill(.red).frame(height: 2000, alignment: .top)
       }
     }
@@ -249,7 +244,6 @@ struct FeatureAView: View {
 
   public enum Action: Sendable {
     case count
-    case count2
     case navigated(DetailTag)
     case goToCButtonTapped
   }
@@ -259,10 +253,6 @@ struct FeatureAView: View {
       switch action {
       case .count:
         state.count += 1
-
-        return .none
-      case .count2:
-        state.count -= 1
 
         return .none
       case .navigated: return .none
@@ -280,8 +270,8 @@ struct FeatureBView: View {
       VStack {
         Text(self.store.title)
         Button("Go to C") { self.store.send(.goToCButtonTapped) }
-        Button("Count up: \(self.store.count)") { self.store.send(.count) }
-        Button("Count down: \(self.store.count)") { self.store.send(.count2) }
+        Button("Increment") { self.store.send(.count) }
+        Text("\(self.store.count)")
         Rectangle().fill(.red).frame(height: 2000, alignment: .top)
       }
     }
